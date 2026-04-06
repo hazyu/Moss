@@ -24,10 +24,7 @@ class Moss {
     }
     
     public render() {
-        elements.forEach((element) => {
-            (element as any).draw() 
-        })
-
+        (elements[0] as any ).draw()
         moss_render.call();
     }
 }
@@ -46,16 +43,26 @@ type Size = {
     height: number
 }
 
+type Vector2 = {
+    x: number
+    y: number
+}
+
 class Element {
     
     private id: number;
     private _size: Size;
     private _color: Color;
+    private _padding: Vector2;
+    private _gap: number;
+    private children: Element[] = [];
 
     constructor(id: number) {
         this.id = id;
         this._size = {x: 0, y: 0, width: 0, height: 0};
         this._color = {red: 0, green: 0, blue: 0, alpha: 0};
+        this._padding = {x: 0, y: 0};
+        this._gap = 0;
     }
 
     public position(x: number, y: number) {
@@ -71,18 +78,22 @@ class Element {
     }
 
     public color(red: number, green: number, blue: number, alpha: number) {
-        this._color.red = red;
-        this._color.green = green;
-        this._color.blue = blue;
-        this._color.alpha = alpha;
+        this._color = {red, green, blue, alpha};
+        return this;
+    }
+
+    public padding(x: number, y: number) {
+        this._padding = {x, y};
+        return this;
+    }
+
+    public gap(size: number) {
+        this._gap = size;
         return this;
     }
 
     public contain(...elements: Element[]) {
-        elements.forEach((element) => {
-            element._size.x += this._size.x;
-            element._size.y += this._size.y;
-        })
+        this.children = elements;
     }
 
     private draw() {
@@ -96,6 +107,20 @@ class Element {
             this._color.blue,
             this._color.alpha
         )
+
+        let leftOffset = this._padding.x;
+
+        this.children.forEach((child) => {
+            const position: Vector2 = {x: child._size.x + this._size.x, y: child._size.y + this._size.y};
+            position.x += leftOffset;
+            position.y += this._padding.y;
+
+            child._size.x = position.x;
+            child._size.y = position.y; 
+            child.draw()
+
+            leftOffset += child._size.width + this._gap;
+        })
     }
 }
 
