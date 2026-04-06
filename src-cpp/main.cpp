@@ -43,11 +43,18 @@ extern "C" bool moss_should_close() {
 }
 
 extern "C" void moss_clear() {
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 }
 
 extern "C" void moss_render() {
   SDL_RenderPresent(renderer);
+}
+
+extern "C" void moss_draw_rect(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+  SDL_SetRenderDrawColor(renderer, r,g,b,a);
+  SDL_Rect rect = {x,y,width,height};
+  SDL_RenderFillRect(renderer, &rect);
 }
 
 

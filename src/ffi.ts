@@ -14,4 +14,14 @@ export const moss_init = new CFunction(lib.symbol("moss_init"), types.sint, [
 export const moss_should_close = new CFunction(lib.symbol("moss_should_close"), types.sint, [])
 export const moss_clear = new CFunction(lib.symbol("moss_clear"), types.void, [])
 export const moss_render = new CFunction(lib.symbol("moss_render"), types.void, [])
+export const moss_draw_rect = new CFunction(lib.symbol("moss_draw_rect"), types.void, [
+  types.sint,
+  types.sint,
+  types.sint,
+  types.sint,
+  types.sint,
+  types.sint,
+  types.sint,
+  types.sint,
+])
 
